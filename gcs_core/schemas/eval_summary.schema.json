@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GenCyberSynth Evaluation Summary (one-line JSON)",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "model",
+    "seed",
+    "real_train_dir",
+    "val_dir",
+    "test_dir",
+    "synth_dir",
+    "fid_cap_per_class",
+    "metrics",
+    "deltas"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "real_train_dir": {
+      "type": "string"
+    },
+    "val_dir": {
+      "type": "string"
+    },
+    "test_dir": {
+      "type": "string"
+    },
+    "synth_dir": {
+      "type": "string"
+    },
+    "fid_cap_per_class": {
+      "type": "integer"
+    },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "fid_macro",
+        "cfid_macro",
+        "js",
+        "kl",
+        "diversity",
+        "real_only",
+        "real_plus_synth"
+      ],
+      "properties": {
+        "fid_macro": {
+          "type": "number"
+        },
+        "cfid_macro": {
+          "type": "number"
+        },
+        "js": {
+          "type": "number"
+        },
+        "kl": {
+          "type": "number"
+        },
+        "diversity": {
+          "type": "number"
+        },
+        "real_only": {
+          "type": "object",
+          "required": [
+            "accuracy",
+            "macro_f1",
+            "bal_acc",
+            "macro_auprc",
+            "recall_at_1pct_fpr",
+            "ece",
+            "brier"
+          ],
+          "properties": {
+            "accuracy": {
+              "type": "number"
+            },
+            "macro_f1": {
+              "type": "number"
+            },
+            "bal_acc": {
+              "type": "number"
+            },
+            "macro_auprc": {
+              "type": "number"
+            },
+            "recall_at_1pct_fpr": {
+              "type": "number"
+            },
+            "ece": {
+              "type": "number"
+            },
+            "brier": {
+              "type": "number"
+            }
+          }
+        },
+        "real_plus_synth": {
+          "type": "object",
+          "required": [
+            "accuracy",
+            "macro_f1",
+            "bal_acc",
+            "macro_auprc",
+            "recall_at_1pct_fpr",
+            "ece",
+            "brier"
+          ],
+          "properties": {
+            "accuracy": {
+              "type": "number"
+            },
+            "macro_f1": {
+              "type": "number"
+            },
+            "bal_acc": {
+              "type": "number"
+            },
+            "macro_auprc": {
+              "type": "number"
+            },
+            "recall_at_1pct_fpr": {
+              "type": "number"
+            },
+            "ece": {
+              "type": "number"
+            },
+            "brier": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "deltas": {
+      "type": "object"
+    }
+  }
+}
