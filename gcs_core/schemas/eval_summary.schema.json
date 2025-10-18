@@ -4,6 +4,7 @@
   "type": "object",
   "required": [
     "timestamp",
+    "run_id",
     "model",
     "seed",
     "real_train_dir",
@@ -15,33 +16,37 @@
     "deltas"
   ],
   "properties": {
-    "timestamp": {
-      "type": "string"
-    },
-    "model": {
-      "type": "string"
-    },
-    "seed": {
-      "type": "integer"
-    },
+    "timestamp": { "type": "string" },
     "run_id": {
-      "type": "string"
+      "type": "string",
+      "description": "Unique id per run, e.g., <model>_seed<seed>_YYYYMMDDTHHMMSSZ"
     },
-    "real_train_dir": {
-      "type": "string"
+    "model": { "type": "string" },
+    "seed": { "type": "integer" },
+
+    "preproc": {
+      "type": "string",
+      "enum": ["[0,1]", "[-1,1]"],
+      "description": "Input scaling convention"
     },
-    "val_dir": {
-      "type": "string"
+    "splits": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Which splits were used in this run (e.g., [\"train\",\"val\",\"test\"])"
     },
-    "test_dir": {
-      "type": "string"
+
+    "real_train_dir": { "type": "string" },
+    "val_dir": { "type": "string" },
+    "test_dir": { "type": "string" },
+    "synth_dir": { "type": "string" },
+
+    "fid_cap_per_class": { "type": "integer" },
+    "synth_per_class": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Target synthetic images per class generated for this run"
     },
-    "synth_dir": {
-      "type": "string"
-    },
-    "fid_cap_per_class": {
-      "type": "integer"
-    },
+
     "metrics": {
       "type": "object",
       "required": [
@@ -54,21 +59,34 @@
         "real_plus_synth"
       ],
       "properties": {
-        "fid_macro": {
-          "type": "number"
+        "fid_macro": { "type": "number" },
+        "cfid_macro": { "type": "number" },
+
+        "kid_macro": {
+          "type": "number",
+          "description": "Kernel Inception Distance computed in domain feature space (optional)"
         },
-        "cfid_macro": {
-          "type": "number"
+        "gen_precision": {
+          "type": "number",
+          "description": "Generative precision in domain feature space (optional)"
         },
-        "js": {
-          "type": "number"
+        "gen_recall": {
+          "type": "number",
+          "description": "Generative recall in domain feature space (optional)"
         },
-        "kl": {
-          "type": "number"
+        "ms_ssim": {
+          "type": "number",
+          "description": "Mean MS-SSIM over pairs of generated samples (diversity proxy; optional)"
         },
-        "diversity": {
-          "type": "number"
+        "feature_extractor": {
+          "type": "string",
+          "description": "Name/path of the frozen domain encoder used for FID/cFID/KID/GenP/R"
         },
+
+        "js": { "type": "number" },
+        "kl": { "type": "number" },
+        "diversity": { "type": "number" },
+
         "real_only": {
           "type": "object",
           "required": [
@@ -81,29 +99,16 @@
             "brier"
           ],
           "properties": {
-            "accuracy": {
-              "type": "number"
-            },
-            "macro_f1": {
-              "type": "number"
-            },
-            "bal_acc": {
-              "type": "number"
-            },
-            "macro_auprc": {
-              "type": "number"
-            },
-            "recall_at_1pct_fpr": {
-              "type": "number"
-            },
-            "ece": {
-              "type": "number"
-            },
-            "brier": {
-              "type": "number"
-            }
+            "accuracy": { "type": "number" },
+            "macro_f1": { "type": "number" },
+            "bal_acc": { "type": "number" },
+            "macro_auprc": { "type": "number" },
+            "recall_at_1pct_fpr": { "type": "number" },
+            "ece": { "type": "number" },
+            "brier": { "type": "number" }
           }
         },
+
         "real_plus_synth": {
           "type": "object",
           "required": [
@@ -116,33 +121,36 @@
             "brier"
           ],
           "properties": {
-            "accuracy": {
-              "type": "number"
-            },
-            "macro_f1": {
-              "type": "number"
-            },
-            "bal_acc": {
-              "type": "number"
-            },
-            "macro_auprc": {
-              "type": "number"
-            },
-            "recall_at_1pct_fpr": {
-              "type": "number"
-            },
-            "ece": {
-              "type": "number"
-            },
-            "brier": {
-              "type": "number"
-            }
+            "accuracy": { "type": "number" },
+            "macro_f1": { "type": "number" },
+            "bal_acc": { "type": "number" },
+            "macro_auprc": { "type": "number" },
+            "recall_at_1pct_fpr": { "type": "number" },
+            "ece": { "type": "number" },
+            "brier": { "type": "number" }
           }
         }
       }
     },
-    "deltas": {
-      "type": "object"
-    }
-  }
+
+    "label_fidelity": {
+      "type": "object",
+      "description": "How well a frozen classifier recovers labels from generated data",
+      "properties": {
+        "acc_on_generated": { "type": "number" }
+      }
+    },
+
+    "memorization": {
+      "type": "object",
+      "description": "Nearest-neighbor distances from generated to real samples (sanity for memorization)",
+      "properties": {
+        "nn_dist_mean": { "type": "number" },
+        "nn_dist_min": { "type": "number" }
+      }
+    },
+
+    "deltas": { "type": "object" }
+  },
+  "additionalProperties": true
 }
